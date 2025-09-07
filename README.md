@@ -6,22 +6,25 @@ WSL2 上で最短に再現・実験できる Kaggle 用テンプレ。
 ## Quick Start
 
 ```bash
-# uv & venv
+# uvのインストール
 curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# uv が入る ~/.local/bin を PATH に追加（次回以降も使えるように .bashrc に書き込む）
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
+# 仮想環境の作成と有効化（プロジェクト専用のPython環境）
 python3.11 -m venv .venv
 source .venv/bin/activate
 
-# 依存ロック & 同期
+# 依存関係を固定してインストール
 uv lock
 uv sync
 
-# 品質ツール（初回）
+# Git コミット前にコードを自動チェック/整形する仕組みを導入
 pre-commit install
 
-# Jupyter カーネル（必要なら）
+# Jupyter Notebook/Lab からこの環境を選べるように登録（必要な場合だけ）
 python -m ipykernel install --user --name kaggle-template
 ```
 
@@ -32,33 +35,46 @@ kaggle-template/
 ├─ pyproject.toml
 ├─ uv.lock
 ├─ .pre-commit-config.yaml
-├─ .gitignore  (任意)
+├─ .gitignore
 ├─ README.md
 ├─ src/
 ├─ notebooks/
 │   └─ 00_eda.ipynb
-├─ data/
-├─ models/
-└─ outputs/
+├─ data/        # Git管理外 (大規模データを置く)
+├─ models/      # Git管理外 (学習済みモデルを置く)
+└─ outputs/     # Git管理外 (予測結果や中間生成物を置く)
     ├─ oof/
     └─ preds/
 ```
 
 ## GPU (RTX3060)
 
-- Windows 側 NVIDIA Driver を最新、WSL 用 CUDA は PyTorch の cuXXX ホイールで賄う方針（Toolkitは不要）
+### インストール方法
 
 ```bash
+# PyTorch (GPU版) のインストール
+# cu121 = CUDA 12.1 対応ビルド。自分のドライバに合ったものを選ぶ
 uv pip install --extra-index-url https://download.pytorch.org/whl/cu121 \
   torch torchvision torchaudio
+
+# インストール確認 (バージョン / CUDA / GPU 利用可否を出力)
 python - <<'PY'
 import torch
-print('Torch:', torch.__version__, 'CUDA:', torch.version.cuda, 'is_available:', torch.cuda.is_available())
+print("Torch:", torch.__version__)
+print("CUDA version:", torch.version.cuda)
+print("CUDA available:", torch.cuda.is_available())
 PY
 ```
 
+### 注意点
+
+- Windows 側 NVIDIA Driver を最新にしておく
+- WSL 用 CUDA Toolkit は不要、PyTorch の **cuXXX ホイール**を入れるだけでOK
+- cu121 は CUDA 12.1 用。ドライバによっては cu118 や cu124 が必要になるので確認すること
+
 ## Tips
-- 依存追加：`uv add <pkg>` → `uv lock` → `uv sync`
+- 依存を追加：`uv add <pkg>` → `uv lock` → `uv sync`
+- 依存を更新：`uv lock --upgrade-package <pkg>` → `uv sync`
 - 解析前に `pre-commit run -a` で整形/静的解析
 
 ## License
