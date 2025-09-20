@@ -21,6 +21,12 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
+# --- Python 3.11 が未インストールの場合 ---
+# Ubuntu 標準リポジトリにあれば:
+sudo apt update
+sudo apt install -y python3.11 python3.11-venv python3.11-dev
+# --------------------------------------------
+
 # 仮想環境の作成と有効化（プロジェクト専用のPython環境）
 python3.11 -m venv .venv
 source .venv/bin/activate
@@ -29,11 +35,14 @@ source .venv/bin/activate
 uv lock
 uv sync
 
+# 開発・解析に必要なツールをインストール
+uv add notebook jupyterlab ipykernel pre-commit
+
 # Git コミット前にコードを自動チェック/整形する仕組みを導入
-pre-commit install
+#pre-commit install
 
 # Jupyter Notebook/Lab からこの環境を選べるように登録（必要な場合だけ）
-python -m ipykernel install --user --name kaggle-template
+python -m ipykernel install --user --name kaggle-template --display-name "Python (kaggle-template)"
 ```
 
 ## Resume Work

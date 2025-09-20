@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 
 # ここは CPU/共通ライブラリのみ（GPU系はREADME手順で別途）
 dependencies = [
-  "numpy<2.0",         # まずは保守的に固定。問題なければ外す/上げる
+  "numpy<2.0", # まずは保守的に固定。問題なければ外す/上げる
   "pandas",
   "scikit-learn",
   "matplotlib",
@@ -22,6 +22,10 @@ dependencies = [
   "kaggle",
   "python-dotenv",
   "jinja2",
+  "notebook>=7.4.5",
+  "jupyterlab>=4.4.7",
+  "ipykernel>=6.30.1",
+  "pre-commit>=4.3.0",
 ]
 
 [tool.uv]

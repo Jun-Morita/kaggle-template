@@ -14,10 +14,16 @@ __pycache__/
 logs/
 *.log
 
-# Kaggle data & outputs
-data/
+# Kaggle data & outputs (Git 管理外)
+#data/
 outputs/
 models/
+oof/
+catboost_info/
+
+# Build / Packaging
+*.egg-info/
+kaggle_template.egg-info/
 
 # System files
 .DS_Store
