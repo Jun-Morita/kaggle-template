@@ -3,6 +3,14 @@
 WSL2 上で最短に再現・実験できる Kaggle 用テンプレ。  
 **WSL2 (Ubuntu) / Python 3.11 / uv + venv / pre-commit / PyTorch GPU**。
 
+## Getting Started
+
+```bash
+# リポジトリを取得
+git clone https://github.com/<your-name>/kaggle-template.git
+cd kaggle-template
+```
+
 ## Quick Start
 
 ```bash
@@ -26,6 +34,15 @@ pre-commit install
 
 # Jupyter Notebook/Lab からこの環境を選べるように登録（必要な場合だけ）
 python -m ipykernel install --user --name kaggle-template
+```
+
+## Resume Work
+```bash
+# プロジェクトフォルダに移動
+cd ~/kaggle-template
+
+# 仮想環境を有効化
+source .venv/bin/activate
 ```
 
 ## Project Layout
