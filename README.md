@@ -36,7 +36,7 @@ uv lock
 uv sync
 
 # 開発・解析に必要なツールをインストール
-uv add notebook jupyterlab ipykernel pre-commit
+uv add notebook jupyterlab ipykernel pre-commit japanize-matplotlib matplotlib-venn holiday holidays
 
 # Git コミット前にコードを自動チェック/整形する仕組みを導入
 #pre-commit install
