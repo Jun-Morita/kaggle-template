@@ -1,60 +1,73 @@
-# Kaggle Template (WSL + uv)
+# Kaggle Template (WSL2 + uv)
 
-WSL2 上で最短に再現・実験できる Kaggle 用テンプレ。  
-**WSL2 (Ubuntu) / Python 3.11 / uv + venv / pre-commit / PyTorch GPU**。
+WSL2 上で**最短**に再現・実験できる Kaggle 用テンプレ。  
+**WSL2 (Ubuntu)** / **Python 3.11** / **uv + venv** / **pre-commit** / **PyTorch GPU** 対応。
 
-## Getting Started
+---
+
+## 0. 前提
+- Windows 10/11 + **WSL2** 有効化済み（Ubuntu 推奨）
+- Python 3.11 を利用（無ければ後述の手順で導入）
+- NVIDIA GPU を使う場合は **Windows 側ドライバを最新化**  
+  ※ WSL 内に CUDA Toolkit の個別インストールは不要（PyTorch の *cuXXX* ホイールでOK）
+
+---
+
+## 1. リポジトリ取得
 
 ```bash
-# リポジトリを取得
-git clone https://github.com/<your-name>/kaggle-template.git
+git clone https://github.com/Jun-Morita/kaggle-template.git
 cd kaggle-template
-```
+````
 
-## Quick Start
+---
+
+## 2. セットアップ（初回のみ）
 
 ```bash
-# uvのインストール
+# uv のインストール
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# uv が入る ~/.local/bin を PATH に追加（次回以降も使えるように .bashrc に書き込む）
+# ~/.local/bin を PATH に追加（永続化）
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
-# --- Python 3.11 が未インストールの場合 ---
-# Ubuntu 標準リポジトリにあれば:
+# ---- Python 3.11 が未インストールの場合 ----
 sudo apt update
 sudo apt install -y python3.11 python3.11-venv python3.11-dev
-# --------------------------------------------
+# ---------------------------------------------
 
-# 仮想環境の作成と有効化（プロジェクト専用のPython環境）
+# プロジェクト専用の仮想環境を作成・有効化
 python3.11 -m venv .venv
 source .venv/bin/activate
 
-# 依存関係を固定してインストール
+# 依存関係をロック＆インストール
 uv lock
 uv sync
 
-# 開発・解析に必要なツールをインストール
-uv add notebook jupyterlab ipykernel pre-commit japanize-matplotlib matplotlib-venn holiday holidays
+# 開発ツール・よく使う解析用パッケージ（必要に応じて調整）
+uv add notebook jupyterlab ipykernel pre-commit japanize-matplotlib matplotlib-venn holidays
+#  ↑ 注: 'holiday' ではなく 'holidays'（python-holidays）です
 
-# Git コミット前にコードを自動チェック/整形する仕組みを導入
-#pre-commit install
+# pre-commit（コミット前の自動整形・静的チェック）を有効化
+pre-commit install
 
-# Jupyter Notebook/Lab からこの環境を選べるように登録（必要な場合だけ）
+# Jupyter からこの環境を選べるようカーネル登録（必要な場合のみ）
 python -m ipykernel install --user --name kaggle-template --display-name "Python (kaggle-template)"
 ```
 
-## Resume Work
-```bash
-# プロジェクトフォルダに移動
-cd ~/kaggle-template
+---
 
-# 仮想環境を有効化
+## 3. ふだんの使い方（Resume Work）
+
+```bash
+cd ~/kaggle-template
 source .venv/bin/activate
 ```
 
-## Project Layout
+---
+
+## 4. プロジェクト構成
 
 ```
 kaggle-template/
@@ -66,44 +79,58 @@ kaggle-template/
 ├─ src/
 ├─ notebooks/
 │   └─ 00_eda.ipynb
-├─ data/        # Git管理外 (大規模データを置く)
-├─ models/      # Git管理外 (学習済みモデルを置く)
-└─ outputs/     # Git管理外 (予測結果や中間生成物を置く)
+├─ data/        # Git管理外（大規模データ）
+├─ models/      # Git管理外（学習済みモデル）
+└─ outputs/     # Git管理外（予測/中間生成物）
     ├─ oof/
     └─ preds/
 ```
 
-## GPU (RTX3060)
+---
 
-### インストール方法
+## 5. GPU (RTX3060 など)
+
+### インストール
 
 ```bash
-# PyTorch (GPU版) のインストール
-# cu121 = CUDA 12.1 対応ビルド。自分のドライバに合ったものを選ぶ
-uv pip install --extra-index-url https://download.pytorch.org/whl/cu121 \
-  torch torchvision torchaudio
+# 例: CUDA 12.1 対応 (cu121) の PyTorch を入れる
+uv pip install --extra-index-url https://download.pytorch.org/whl/cu121 torch torchvision torchaudio
+```
 
-# インストール確認 (バージョン / CUDA / GPU 利用可否を出力)
+> **メモ**: ドライバや環境に応じて
+>
+> * CUDA 11.8: `.../cu118`
+> * CUDA 12.4: `.../cu124`
+>   などに差し替えてください。CPU 版にしたい場合は extra-index-url を付けずに `uv add torch torchvision torchaudio` でOK。
+
+### 動作確認
+
+```bash
 python - <<'PY'
 import torch
 print("Torch:", torch.__version__)
 print("CUDA version:", torch.version.cuda)
 print("CUDA available:", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("GPU name:", torch.cuda.get_device_name())
 PY
 ```
 
-### 注意点
+---
 
-- Windows 側 NVIDIA Driver を最新にしておく
-- WSL 用 CUDA Toolkit は不要、PyTorch の **cuXXX ホイール**を入れるだけでOK
-- cu121 は CUDA 12.1 用。ドライバによっては cu118 や cu124 が必要になるので確認すること
+## 6. Tips
 
-## Tips
-- 依存を追加：`uv add <pkg>` → `uv lock` → `uv sync`
-- 依存を更新：`uv lock --upgrade-package <pkg>` → `uv sync`
-- 解析前に `pre-commit run -a` で整形/静的解析
+* 依存追加：`uv add <pkg>` → `uv lock` → `uv sync`
+* 依存更新：`uv lock --upgrade-package <pkg>` → `uv sync`
+* 解析前の整形/静的解析：`pre-commit run -a`
 
-## License
+---
 
-MIT
+## 7. よくある詰まりポイント
 
+* **`uv: command not found`**
+  → `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc`
+* **Jupyter にカーネルが出ない**
+  → `.venv` を有効化後に `python -m ipykernel install --user --name kaggle-template`
+* **GPU が使えない**
+  → Windows 側 NVIDIA ドライバ更新／PyTorch の *cuXXX* を環境に合わせて再インストール
