@@ -68,4 +68,4 @@ line-length = 100
 target-version = "py311"
 select = ["E", "F", "I"]
 ignore = []
-exclude = ["data", "outputs", ".venv"]
+exclude = ["src", "notebooks", "data", "models", "outputs", ".venv"]
