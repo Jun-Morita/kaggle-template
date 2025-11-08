@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kaggle-template"
 version = "0.1.0"
@@ -32,15 +36,20 @@ dependencies = [
   "holidays>=0.81",
 ]
 
-[tool.uv]
-# 開発時にだけ必要な依存
-dev-dependencies = [
+# uv の新形式：開発時のみ必要な依存は dependency-groups.dev へ
+[dependency-groups]
+dev = [
   "ipykernel",
   "ruff",
   "black",
   "isort",
   "pre-commit",
 ]
+
+# setuptools にパッケージ検出ポリシーを明示
+[tool.setuptools.packages.find]
+include = ["kaggle_template*"]
+exclude = ["data*", "sample*", "outputs*", "notebooks*"]
 
 [tool.black]
 line-length = 100
@@ -60,7 +69,3 @@ target-version = "py311"
 select = ["E", "F", "I"]
 ignore = []
 exclude = ["data", "outputs", ".venv"]
-
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
