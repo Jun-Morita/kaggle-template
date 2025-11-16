@@ -5,7 +5,7 @@ WSL2 上で**最短**に再現・実験できる Kaggle 用テンプレ。
 
 ---
 
-## 0. 前提
+## 1. 前提
 
 - Windows 10/11 + **WSL2** 有効化済み（Ubuntu 推奨）
 - Python 3.11 を利用（無ければ後述の手順で導入）
@@ -14,7 +14,7 @@ WSL2 上で**最短**に再現・実験できる Kaggle 用テンプレ。
 
 ---
 
-## 1. リポジトリ取得（GitHub と連携したい場合）
+## 2. リポジトリ取得（GitHub と連携したい場合）
 
 ```bash
 git clone https://github.com/Jun-Morita/kaggle-template.git
@@ -23,7 +23,7 @@ cd kaggle-template
 
 ---
 
-## 1.1 Git管理せずにテンプレだけ使いたい場合
+## 2.1 Git管理せずにテンプレだけ使いたい場合
 
 テンプレの構成だけ欲しく、**このプロジェクトで Git を使わない場合**はこちら：
 
@@ -40,43 +40,45 @@ rm -rf .git
 
 ---
 
-## 2. セットアップ（初回のみ）
+## 3. セットアップ（初回のみ）
+
+### 3.1 uv の導入 + PATH 追記
 
 ```bash
-# uv のインストール
 curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# ~/.local/bin を PATH に追加（永続化）
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
+```
 
-# ---- Python 3.11 が未インストールの場合 ----
+### 3.2 Python 3.11 をまだ入れていない場合
+
+```bash
 sudo apt update
 sudo apt install -y python3.11 python3.11-venv python3.11-dev
-# ---------------------------------------------
+```
 
-# プロジェクト専用の仮想環境を作成・有効化
+### 3.3 仮想環境の作成と依存インストール
+
+```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-
-# 依存関係をロック＆インストール
-uv lock
-uv sync
-
-# 開発ツール・よく使う解析用パッケージ（必要に応じて調整）
+uv lock && uv sync
 uv add notebook jupyterlab ipykernel pre-commit japanize-matplotlib matplotlib-venn holidays
-#  ↑ 注: 'holiday' ではなく 'holidays'（python-holidays）です
-
-# pre-commit（コミット前の自動整形・静的チェック）を有効化
 pre-commit install
+```
 
-# Jupyter からこの環境を選べるようカーネル登録（必要な場合のみ）
+> `uv add` でよく使うパッケージをまとめて入れています。  
+> 必要に応じて追加・削除してください。
+
+### 3.4 Jupyter カーネル登録（必要な場合のみ）
+
+```bash
 python -m ipykernel install --user --name kaggle-template --display-name "Python (kaggle-template)"
 ```
 
 ---
 
-## 3. ふだんの使い方（Resume Work）
+## 4. ふだんの使い方（Resume Work）
 
 ```bash
 cd ~/kaggle-template   # または自分のプロジェクトフォルダ
@@ -85,7 +87,7 @@ source .venv/bin/activate
 
 ---
 
-## 4. Git clone 版 vs Template Only 版 比較
+## 5. Git clone 版 vs Template Only 版 比較
 
 | 目的                             | 方法                                     | Git管理 | 説明         |
 | ------------------------------ | -------------------------------------- | ----- | ---------- |
@@ -94,7 +96,7 @@ source .venv/bin/activate
 
 ---
 
-## 5. pyproject.toml あり/なし の違い
+## 6. pyproject.toml あり/なし の違い
 
 | 運用スタイル                     | 特徴                        | どんな人向け？          |
 | -------------------------- | ------------------------- | ---------------- |
@@ -106,7 +108,7 @@ source .venv/bin/activate
 
 ---
 
-## 6. プロジェクト構成
+## 7. プロジェクト構成
 
 ```
 kaggle-template/
@@ -127,7 +129,7 @@ kaggle-template/
 
 ---
 
-## 7. GPU (RTX3060 など)
+## 8. GPU (RTX3060 など)
 
 ### インストール
 
@@ -160,7 +162,7 @@ PY
 
 ---
 
-## 8. Tips
+## 9. Tips
 
 * 依存追加：`uv add <pkg>` → `uv lock` → `uv sync`
 * 依存更新：`uv lock --upgrade-package <pkg>` → `uv sync`
@@ -168,7 +170,7 @@ PY
 
 ---
 
-## 9. よくある詰まりポイント
+## 10. よくある詰まりポイント
 
 * **`uv: command not found`**
   → `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc`
