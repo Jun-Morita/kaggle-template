@@ -78,6 +78,9 @@ cd sample/titanic
 cd sample/houseprices
 ```
 
+サンプルNotebookは公開テンプレートとして初回実行を軽くするため、`N_SEEDS = 1` にしています。  
+精度を詰める場合は `N_SEEDS` や `N_SPLIT` を増やしてください。
+
 ## 5. リポジトリ構成（現在）
 
 ```text
@@ -97,7 +100,7 @@ kaggle-template/
 ```
 
 補足:
-- `sample/*/models`, `sample/*/oof`, `sample/*/catboost_info` には学習済み成果物が入っています。
+- `sample/*/models`, `sample/*/oof`, `sample/*/catboost_info` などの学習済み成果物は Git 管理外です。
 - いまの実体は `sample/` 中心の構成です。
 
 ## 6. コミット前のチェック
