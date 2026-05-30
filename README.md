@@ -1,7 +1,7 @@
 # Kaggle Template (WSL2 + uv)
 
 WSL2 で Kaggle の検証をすぐ始めるためのテンプレートです。  
-環境構築用の設定と、サンプルノートブック（Titanic / House Prices）を含みます。
+環境構築用の設定と、サンプルノートブック（Titanic / House Prices / Leaf Classification）を含みます。
 
 ## 1. こんな人向け
 
@@ -76,6 +76,8 @@ source .venv/bin/activate
 cd sample/titanic
 # または
 cd sample/houseprices
+# または
+cd sample/leaf-classification
 ```
 
 サンプルNotebookは公開テンプレートとして初回実行を軽くするため、`N_SEEDS = 1` にしています。  
@@ -94,8 +96,11 @@ kaggle-template/
    ├─ titanic/
    │  ├─ titanic.ipynb
    │  └─ data/
-   └─ houseprices/
-      ├─ houseprices.ipynb
+   ├─ houseprices/
+   │  ├─ houseprices.ipynb
+   │  └─ data/
+   └─ leaf-classification/
+      ├─ leaf-classification.ipynb
       └─ data/
 ```
 
@@ -105,12 +110,67 @@ kaggle-template/
 
 ## 6. サンプルデータの出典
 
-サンプルNotebookでは、以下の Kaggle Competition で配布されているデータを使用しています。
+サンプルでは、以下の Kaggle Competition で配布されているデータを使用します。
 
 - [Titanic - Machine Learning from Disaster](https://www.kaggle.com/competitions/titanic)
 - [House Prices - Advanced Regression Techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
+- [Leaf Classification](https://www.kaggle.com/competitions/leaf-classification)
 
 データを利用・再配布する場合は、各 Competition ページの Rules を確認してください。
+リポジトリ本体の MIT License は、以下のデータには適用されません。
+
+### 6.1 Titanic
+
+Titanic の乗客データについては、Vanderbilt University Department of Biostatistics の
+データセット解説を参照してください。解説では、主な情報源として Encyclopedia Titanica が
+挙げられています。
+
+Original dataset and provenance:
+- [Titanic Data](https://hbiostat.org/data/repo/titanic.html)
+- [Vanderbilt Biostatistics Datasets](https://hbiostat.org/data/)
+- [Encyclopedia Titanica](https://www.encyclopedia-titanica.org/)
+
+License / usage terms:
+- Vanderbilt Biostatistics Datasets では、提供データセットの利用を許可し、原典および
+  Vanderbilt University Department of Biostatistics から取得した旨の記載を求めています。
+- 標準化されたオープンデータライセンスは明記されていません。
+
+### 6.2 House Prices
+
+House Prices のデータは、Ames City Assessor's Office の記録を基に Dean De Cock が整備した
+Ames Housing Data を使用しています。
+
+Citation:
+
+> De Cock, D. (2011). Ames, Iowa: Alternative to the Boston Housing Data as an
+> End of Semester Regression Project. Journal of Statistics Education, 19(3).
+
+Original dataset and provenance:
+- [Ames Housing Data paper](https://jse.amstat.org/v19n3/decock.pdf)
+- [Ames Housing data](https://jse.amstat.org/v19n3/decock/AmesHousing.txt)
+
+License / usage terms:
+- 原典論文では、Ames City Assessor's Office から受領した元データを共有する意向が
+  示されています。
+- 標準化されたオープンデータライセンスは明記されていません。
+
+### 6.3 Leaf Classification
+
+Leaf Classification のデータは、UCI Machine Learning Repository で公開されているデータセットを
+基にしています。
+このリポジトリでは、Kaggle Competition で配布されている 99 種・1,584 画像の版を使用します。
+
+Citation:
+
+> Cope, J., Beghin, T., Remagnino, P., & Barman, S. (2013).
+> One-hundred plant species leaves data set [Dataset].
+> UCI Machine Learning Repository. https://doi.org/10.24432/C5RG76.
+
+Original dataset:
+- [One-hundred plant species leaves data set](https://archive.ics.uci.edu/dataset/241/one+hundred+plant+species+leaves+data+set)
+
+License:
+- [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
 ## 7. コミット前のチェック
 
