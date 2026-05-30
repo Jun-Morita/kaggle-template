@@ -1,12 +1,13 @@
 # Kaggle Template (WSL2 + uv)
 
-WSL2 で Kaggle の検証をすぐ始めるためのテンプレートです。  
+WSL2 または Google Colaboratory で Kaggle の検証をすぐ始めるためのテンプレートです。
 環境構築用の設定と、サンプルノートブック（Titanic / House Prices / Leaf Classification /
 Bike Sharing Demand）を含みます。
 
 ## 1. こんな人向け
 
 - WSL2 で Python 環境を安定して運用したい
+- Google Colaboratory でも同じNotebookを動かしたい
 - Kaggle の作業を再現しやすい形で始めたい
 - サンプルNotebookをベースに素早く検証したい
 
@@ -64,6 +65,25 @@ pre-commit install
 python -m ipykernel install --user --name kaggle-template --display-name "Python (kaggle-template)"
 ```
 
+### 3.3 Google Colaboratory
+
+GitHub 上のNotebookは、次の形式のURLで Colab から直接開けます。
+
+```text
+https://colab.research.google.com/github/Jun-Morita/kaggle-template/blob/main/sample/titanic/titanic.ipynb
+```
+
+`sample/titanic/titanic.ipynb` の部分を、実行したいNotebookのパスへ置き換えてください。
+
+各Notebookの `Google Colab setup` セルは、Colab で実行した場合のみ、次の準備を行います。
+
+- 不足している `catboost`、`lightgbm`、`xgboost`、`fg-data-profiling[notebook]` をインストール
+- このリポジトリを `/content/kaggle-template` へ shallow clone
+- 対象サンプルのディレクトリへ移動
+
+同梱データを使う場合は、そのまま上から順番に実行できます。Google Drive 上のデータを使う場合は、
+各Notebook冒頭の mount 用セルを有効化し、`MAIN_PATH` をデータ配置先に変更してください。
+
 ## 4. 日常作業
 
 ```bash
@@ -117,6 +137,25 @@ cd sample/bike-sharing-demand
 `Pipeline` にこれらの処理を含め、validation の情報が学習へ混ざらないようにしています。
 木モデルへ渡す `category` dtype のカテゴリ定義は train/test で表現を揃えるため共通化しますが、
 目的変数や集計値は使用しません。
+
+### 4.2 fg-data-profiling による EDA
+
+各Notebookの EDA 冒頭では、[`fg-data-profiling`](https://pypi.org/project/fg-data-profiling/) の
+`ProfileReport` を使い、欠損値、分布、データ型、データ品質の警告を Notebook 内の HTML report で
+確認できます。`ydata-profiling` から改名されており、import 名は `data_profiling` です。
+
+初回実行を重くしすぎないよう、既定値では高コストな計算を抑える `minimal=True` を使います。
+また、行数が多い場合は `EDA_PROFILE_MAX_ROWS = 10_000` を上限として profiling 対象を絞ります。
+通常のテーブルデータはランダム抽出し、Bike Sharing Demand は時系列順を保った直近期間を使います。
+
+Bike Sharing Demand では、日時列を指定して `tsmode=True` も有効化します。profiling を省略して
+学習だけ実行する場合は、`CFG.RUN_DATA_PROFILING = False` に変更してください。
+
+レポートをファイルとして保存したい場合:
+
+```python
+profile_report.to_file("data_profiling_report.html")
+```
 
 ## 5. リポジトリ構成（現在）
 

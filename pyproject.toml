@@ -23,6 +23,7 @@ dependencies = [
   "notebook>=7.4.5",
   "jupyterlab>=4.4.7",
   "ipykernel>=6.30.1",
+  "fg-data-profiling[notebook]>=4.19.1,<5",
 ]
 
 # uv の新形式：開発時のみ必要な依存は dependency-groups.dev へ
