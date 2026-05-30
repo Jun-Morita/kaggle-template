@@ -84,7 +84,39 @@ cd sample/bike-sharing-demand
 ```
 
 サンプルNotebookは公開テンプレートとして初回実行を軽くするため、`N_SEEDS = 1` にしています。  
-精度を詰める場合は `N_SEEDS` や `N_SPLIT` を増やしてください。
+計算時間に余裕があれば、`N_SEEDS` を増やして予測の分散を抑えられます。
+`N_SPLIT` は単純に増やすのではなく、データ量と validation の設計に合わせて調整してください。
+
+### 4.1 サンプルNotebookの選び方
+
+4つのNotebookは、それぞれ単独で実行できます。最初は Titanic で全体の流れを確認し、
+取り組みたいタスクに近いNotebookへ進むと理解しやすくなります。
+
+| Notebook | タスク | 主な評価指標 | 検証方法 | 学ぶポイント |
+| --- | --- | --- | --- | --- |
+| Titanic | 二値分類 | ROC AUC | Stratified KFold | 欠損値、カテゴリ特徴量、確率予測 |
+| House Prices | テーブル回帰 | RMSLE | KFold | 対数変換、特徴量作成、残差分析 |
+| Leaf Classification | 多値分類 | multiclass log loss | Stratified KFold | クラス確率、混同行列、信頼度分析 |
+| Bike Sharing Demand | 時系列回帰 | RMSLE | expanding-window CV | 日時特徴量、未来情報のリーク、期間別検証 |
+
+各Notebookは、次の順序で構成しています。
+
+1. データ読み込みと EDA
+2. 特徴量作成
+3. competition に合わせた validation
+4. LightGBM / XGBoost / CatBoost / 線形モデルの学習
+5. OOF 予測による評価と seed averaging
+6. 推論と `submission.csv` の作成
+7. feature importance と予測診断
+
+学習済みモデル、OOF 予測、提出ファイルは、各サンプルディレクトリ配下の `models/` と
+`oof/` に保存されます。これらは Git 管理外です。
+
+欠損値の補完や one-hot encoding など、データから統計量や変換ルールを学習する処理は、
+原則として各 fold の学習データだけで `fit` します。サンプルでは線形モデルの
+`Pipeline` にこれらの処理を含め、validation の情報が学習へ混ざらないようにしています。
+木モデルへ渡す `category` dtype のカテゴリ定義は train/test で表現を揃えるため共通化しますが、
+目的変数や集計値は使用しません。
 
 ## 5. リポジトリ構成（現在）
 
@@ -123,8 +155,12 @@ kaggle-template/
 - [Leaf Classification](https://www.kaggle.com/competitions/leaf-classification)
 - [Bike Sharing Demand](https://www.kaggle.com/competitions/bike-sharing-demand)
 
-データを利用・再配布する場合は、各 Competition ページの Rules を確認してください。
+このリポジトリには、Notebook を単独で実行できるようにサンプルデータを同梱しています。
+Competition 用に整形されたファイルを利用・再配布する場合は、原典の条件だけでなく、
+各 Competition ページの Rules も確認してください。
 リポジトリ本体の MIT License は、以下のデータには適用されません。
+以下では、確認できた原典の citation と license / usage terms を記載します。
+Competition 版では、train/test 分割、列名、対象クラスなどが原典から変更されている場合があります。
 
 ### 6.1 Titanic
 
@@ -176,7 +212,7 @@ Citation:
 Original dataset:
 - [One-hundred plant species leaves data set](https://archive.ics.uci.edu/dataset/241/one+hundred+plant+species+leaves+data+set)
 
-License:
+Original dataset license:
 - [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
 ### 6.4 Bike Sharing Demand
@@ -192,7 +228,7 @@ Citation:
 Original dataset:
 - [Bike Sharing](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
 
-License:
+Original dataset license:
 - [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
 ## 7. コミット前のチェック
