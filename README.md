@@ -1,7 +1,8 @@
 # Kaggle Template (WSL2 + uv)
 
 WSL2 で Kaggle の検証をすぐ始めるためのテンプレートです。  
-環境構築用の設定と、サンプルノートブック（Titanic / House Prices / Leaf Classification）を含みます。
+環境構築用の設定と、サンプルノートブック（Titanic / House Prices / Leaf Classification /
+Bike Sharing Demand）を含みます。
 
 ## 1. こんな人向け
 
@@ -78,6 +79,8 @@ cd sample/titanic
 cd sample/houseprices
 # または
 cd sample/leaf-classification
+# または
+cd sample/bike-sharing-demand
 ```
 
 サンプルNotebookは公開テンプレートとして初回実行を軽くするため、`N_SEEDS = 1` にしています。  
@@ -99,8 +102,11 @@ kaggle-template/
    ├─ houseprices/
    │  ├─ houseprices.ipynb
    │  └─ data/
-   └─ leaf-classification/
-      ├─ leaf-classification.ipynb
+   ├─ leaf-classification/
+   │  ├─ leaf-classification.ipynb
+   │  └─ data/
+   └─ bike-sharing-demand/
+      ├─ bike-sharing-demand.ipynb
       └─ data/
 ```
 
@@ -115,6 +121,7 @@ kaggle-template/
 - [Titanic - Machine Learning from Disaster](https://www.kaggle.com/competitions/titanic)
 - [House Prices - Advanced Regression Techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
 - [Leaf Classification](https://www.kaggle.com/competitions/leaf-classification)
+- [Bike Sharing Demand](https://www.kaggle.com/competitions/bike-sharing-demand)
 
 データを利用・再配布する場合は、各 Competition ページの Rules を確認してください。
 リポジトリ本体の MIT License は、以下のデータには適用されません。
@@ -168,6 +175,22 @@ Citation:
 
 Original dataset:
 - [One-hundred plant species leaves data set](https://archive.ics.uci.edu/dataset/241/one+hundred+plant+species+leaves+data+set)
+
+License:
+- [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+
+### 6.4 Bike Sharing Demand
+
+Bike Sharing Demand のデータは、Capital Bikeshare の時間単位・日単位のレンタル数と
+天候・季節情報をまとめた UCI Machine Learning Repository のデータセットを基にしています。
+
+Citation:
+
+> Fanaee-T, H. (2013). Bike Sharing [Dataset].
+> UCI Machine Learning Repository. https://doi.org/10.24432/C5W894.
+
+Original dataset:
+- [Bike Sharing](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
 
 License:
 - [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
