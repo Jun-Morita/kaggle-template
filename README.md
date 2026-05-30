@@ -251,25 +251,48 @@ git status
 `pre-commit install` 済みの場合は、`git commit` 時にも同様のチェックが実行されます。  
 フックで修正が入った場合は、再度 `git add` してコミットしてください。
 
-## 8. GPU (PyTorch) を使う場合
+## 8. GPU を使う場合
 
-```bash
-# 例: CUDA 12.1 (cu121)
-uv pip install --extra-index-url https://download.pytorch.org/whl/cu121 \
-  torch torchvision torchaudio
+4つのサンプルNotebookは、追加ライブラリなしで XGBoost と CatBoost の GPU 学習を選択できます。
+PyTorch は依存関係を軽く保つため、このテンプレートには含めていません。
+
+各Notebookの `CFG` で、次の設定を変更できます。
+
+```python
+ACCELERATOR = "auto"  # auto / cpu / gpu
+GPU_DEVICE_ID = 0
+GPU_MIN_ROWS = 50_000
 ```
 
-確認:
+- `auto`: CUDA 対応 GPU を利用でき、行数が `GPU_MIN_ROWS` 以上なら GPU を選択
+- `cpu`: 常に CPU を使用
+- `gpu`: 行数にかかわらず GPU を要求。GPU を確認できない場合はエラー
+
+GPU はデータ転送などの固定コストがあるため、小規模データでは CPU より遅くなる場合があります。
+[CatBoost の公式ガイド](https://catboost.ai/docs/en/concepts/speed-up-training)では、
+GPU による大きな高速化が見込める目安を数万行以上としています。
+このテンプレートでは、保守的な初期値として `GPU_MIN_ROWS = 50_000` を使います。
+特徴量数、木の深さ、iteration 数、fold 数、GPU の性能でも変わるため、最終的には実測してください。
+
+モデルごとの扱い:
+
+- XGBoost: CUDA 対応ビルドであれば `device="cuda"` と `tree_method="hist"` を設定
+- CatBoost: CUDA device を確認できれば `task_type="GPU"` と `devices="0"` を設定
+- LightGBM: GPU 対応ビルドが別途必要なため、既定値は CPU。対応ビルドを用意した場合のみ
+  `LIGHTGBM_DEVICE_TYPE = "cuda"` に変更。`ACCELERATOR` が GPU を選択した場合に使用
+- 線形モデル: CPU を使用
+
+XGBoost の詳細は [GPU Support](https://xgboost.readthedocs.io/en/stable/gpu/)、
+LightGBM の詳細は [Parameters](https://lightgbm.readthedocs.io/en/latest/Parameters.html)、
+CatBoost の詳細は [Training on GPU](https://catboost.ai/docs/en/features/training-on-gpu) を参照してください。
+
+CatBoost の GPU 学習は、浮動小数点加算の順序により完全には deterministic ではありません。
+同じ seed でも結果が一致しない場合があります。
+
+WSL2 から GPU を認識できるかは、次のコマンドで確認してください。
 
 ```bash
-python - <<'PY'
-import torch
-print("Torch:", torch.__version__)
-print("CUDA:", torch.version.cuda)
-print("CUDA available:", torch.cuda.is_available())
-if torch.cuda.is_available():
-    print("GPU:", torch.cuda.get_device_name())
-PY
+nvidia-smi
 ```
 
 ## 9. よく使うコマンド
