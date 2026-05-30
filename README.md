@@ -103,7 +103,16 @@ kaggle-template/
 - `sample/*/models`, `sample/*/oof`, `sample/*/catboost_info` などの学習済み成果物は Git 管理外です。
 - いまの実体は `sample/` 中心の構成です。
 
-## 6. コミット前のチェック
+## 6. サンプルデータの出典
+
+サンプルNotebookでは、以下の Kaggle Competition で配布されているデータを使用しています。
+
+- [Titanic - Machine Learning from Disaster](https://www.kaggle.com/competitions/titanic)
+- [House Prices - Advanced Regression Techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
+
+データを利用・再配布する場合は、各 Competition ページの Rules を確認してください。
+
+## 7. コミット前のチェック
 
 コミット前に `ruff` を実行して、整形と lint を先に通す運用を推奨します。
 
@@ -123,7 +132,7 @@ git status
 `pre-commit install` 済みの場合は、`git commit` 時にも同様のチェックが実行されます。  
 フックで修正が入った場合は、再度 `git add` してコミットしてください。
 
-## 7. GPU (PyTorch) を使う場合
+## 8. GPU (PyTorch) を使う場合
 
 ```bash
 # 例: CUDA 12.1 (cu121)
@@ -144,7 +153,7 @@ if torch.cuda.is_available():
 PY
 ```
 
-## 8. よく使うコマンド
+## 9. よく使うコマンド
 
 - 依存追加: `uv add <pkg>` → `uv lock` → `uv sync`
 - 依存更新: `uv lock --upgrade-package <pkg>` → `uv sync`
